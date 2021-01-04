@@ -24,6 +24,13 @@ var apiLimiter = new RateLimit({
   delayMs: 0 // disabled until limit is met
 });
 
+if (process.env.NODE_ENV === "production"){
+  app.use(express.static("build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname,  "build", "index.html"));
+  });
+}
+
 // middleware
 app.use('/api/', apiLimiter); // activate limiter for api calls only
 app.use(morgan('tiny')); // server logger
